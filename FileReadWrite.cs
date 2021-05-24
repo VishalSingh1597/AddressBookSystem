@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using CsvHelper;
 using System.Globalization;
+using Newtonsoft.Json;
 
 namespace AddressBookSystem
 {
@@ -13,8 +14,8 @@ namespace AddressBookSystem
     {
         static String FilePath = @"E:\AddressBookSystem\AddressBookSystem\Address.txt";
         static string FilePathCsv = @"E:\AddressBookSystem\AddressBookSystem\CsvData.csv";
+        static String filePathJson = @"E:\AddressBookSystem\AddressBookSystem\jsonfile.json";
 
-       
         public static void WriteTxtFile(List<Person> persons)
         {
             if (File.Exists(FilePath))
@@ -86,6 +87,39 @@ namespace AddressBookSystem
                     {
                         Console.WriteLine(CSValues);
                     }
+                }
+            }
+            else
+            {
+                Console.WriteLine("No such file exists");
+            }
+        }
+        public static void WriteContactsInJSONFile(List<Person> contacts)
+        {
+            if (File.Exists(filePathJson))
+            {
+                JsonSerializer jsonSerializer = new JsonSerializer();
+                using (StreamWriter streamWriter = new StreamWriter(filePathJson))
+                using (JsonWriter writer = new JsonTextWriter(streamWriter))
+                {
+                    jsonSerializer.Serialize(writer, contacts);
+                }
+                Console.WriteLine("Writting Contacts to the JSON file");
+            }
+            else
+            {
+                Console.WriteLine("No such file exists");
+            }
+        }
+
+        public static void ReadContactsFromJSONFile()
+        {
+            if (File.Exists(filePathJson))
+            {
+                IList<Person> contactsRead = JsonConvert.DeserializeObject<IList<Person>>(File.ReadAllText(filePathJson));
+                foreach (Person contact in contactsRead)
+                {
+                    Console.Write(contact.ToString());
                 }
             }
             else
