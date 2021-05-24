@@ -4,13 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using CsvHelper;
+using System.Globalization;
 
 namespace AddressBookSystem
 {
     class FileReadWrite
     {
         static String FilePath = @"E:\AddressBookSystem\AddressBookSystem\Address.txt";
+        static string FilePathCsv = @"E:\AddressBookSystem\AddressBookSystem\CsvData.csv";
 
+       
         public static void WriteTxtFile(List<Person> persons)
         {
             if (File.Exists(FilePath))
@@ -49,6 +53,40 @@ namespace AddressBookSystem
                         Console.WriteLine((personDetails));
                 }
                 Console.ReadKey();
+            }
+            else
+            {
+                Console.WriteLine("No such file exists");
+            }
+        }
+
+        public static void writeIntoCsvFile(List<Person> contacts)
+        {
+            if (File.Exists(FilePathCsv))
+            {
+                using (StreamWriter streamWriter = File.AppendText(FilePathCsv))
+                {
+                    foreach (Person contact in contacts)
+                    {
+                        streamWriter.WriteLine(contact.firstName + "," + contact.lastName + "," + contact.city + "," + contact.state + "," + contact.phoneNumber);
+                    }
+                }
+            }
+        }
+
+        public static void ReadContactsInCSVFile()
+        {
+            if (File.Exists(FilePathCsv))
+            {
+                string[] csv = File.ReadAllLines(FilePathCsv);
+                foreach (string csValues in csv)
+                {
+                    string[] column = csValues.Split(',');
+                    foreach (string CSValues in column)
+                    {
+                        Console.WriteLine(CSValues);
+                    }
+                }
             }
             else
             {
